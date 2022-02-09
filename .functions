@@ -1,0 +1,44 @@
+# print contents of directory immediately when switching
+function cd(){
+  builtin cd $@ && ls -la
+}
+
+# running take will make a directory and cd into it
+function take() {
+  mkdir -p $@ && cd $@
+}
+
+# tree
+function t() {
+  tree -I '.git|node_modules|bower_components|.DS_Store' --dirsfirst --filelimit 30 -L ${1:-3} -aC $2
+}
+
+# replace all extensions of type X with Y in current directory
+# ex: "replace_ext css less" will turn all ".css" files into ".less" files
+function replace_ext {
+  for f in *.$1; do
+    mv -- "$f" "${f%.$1}.$2"
+  done
+}
+
+function source_envfile() {
+  export eval `cat $@` 
+}
+
+function git_br_co() {
+  git branch $@; git checkout $@
+}
+
+function helpme() {
+  cat ~/.dotfiles/.aliases
+  cat ~/.dotfiles/.functions
+}
+
+function b64decode() {
+  echo $1 | base64 --decode
+}
+
+function b64encode() {
+  echo $1 -n | base64
+}
+

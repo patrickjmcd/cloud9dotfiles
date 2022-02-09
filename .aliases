@@ -1,0 +1,33 @@
+alias k="clear"
+alias x="exit"
+alias q="exit"
+alias :q="exit"
+alias ltr="ls -ltr"
+alias ...="../.."
+alias ....="../../.."
+alias .....="../../../.."
+alias please=sudo # nicer sudo command
+alias dammit=sudo # meaner sudo command
+alias resource="source ~/.zshrc"
+
+
+# Git
+alias gmm="git merge master"
+alias gf="git fetch --all --prune"
+alias gl="git pull"
+alias gd="git diff"
+alias ga="git add"
+alias gcm="git checkout master"
+alias glm="git checkout master && git pull"
+alias gcam="git commit -am"
+alias gcmsg="git commit --message"
+alias gs="git status"
+alias glg="git log --graph --decorate --pretty=oneline --abbrev-commit --all"
+alias clone="git clone"
+alias gopen="open_git_repo_online"
+alias gcho="git checkout"
+
+alias tf=terraform
+
+# get current weather
+alias weather="curl wttr.in"

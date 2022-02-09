@@ -1,0 +1,12 @@
+# added by bash_profile_additions.sh
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin:$HOME/.local/bin
+export GOPRIVATE="github.com/meshifyiot"
+
+eval $(ssh-agent)
+ssh-add ~/.ssh/c9github
+
+source ~/.dotfiles/.aliases
+source ~/.dotfiles/.functions
+
+#this line won't be added to the .bash_profile

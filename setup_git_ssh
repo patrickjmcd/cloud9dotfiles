@@ -1,0 +1,7 @@
+# Use SSH for Github
+Host github
+HostName github.com
+User git
+IdentityFile ~/.ssh/c9github
+
+# this last line won't be included when running setup_git_ssh.sh
