@@ -55,7 +55,7 @@ git-ssh:
 	@echo 'Setting up github ssh'
 	git config --global --add url."git@github.com:".insteadOf "https://github.com/"
 	git config --global user.name "Patrick McDonagh"
-  git config --global user.email patrick@meshify.com
+	git config --global user.email patrick@meshify.com
 	./setup_git_ssh.sh
 
 bash-profile-additions:
