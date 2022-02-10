@@ -70,4 +70,10 @@ dev-apt: check-apt
 	
 	$(MAKE) linux
 
+dev-yum: check-yum 
+	@echo "Installing development tools"
+	sudo yum update
+	sudo yum -y upgrade
+	sudo yum install -y tmux tree
+
 linux: $(DOTFILE_FOLDER) bash_profile_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
