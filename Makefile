@@ -17,7 +17,6 @@ help:
 
 
 
-
 APT := /usr/bin/apt
 YUM := /usr/bin/yum
 
@@ -67,7 +66,6 @@ dev-apt: check-apt
 	sudo apt-get update
 	sudo apt-get -y upgrade
 	sudo apt-get install -y build-essential tmux tree
-	
 	$(MAKE) linux
 
 dev-yum: check-yum 
@@ -75,5 +73,6 @@ dev-yum: check-yum
 	sudo yum update
 	sudo yum -y upgrade
 	sudo yum install -y tmux tree
+	$(MAKE) linux
 
 linux: $(DOTFILE_FOLDER) bash_profile_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
