@@ -31,3 +31,5 @@ alias tf=terraform
 
 # get current weather
 alias weather="curl wttr.in"
+
+eval $(thefuck --alias)

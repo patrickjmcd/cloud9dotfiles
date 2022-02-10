@@ -9,4 +9,6 @@ ssh-add ~/.ssh/c9github
 source ~/.dotfiles/.aliases
 source ~/.dotfiles/.functions
 
+source ~/.local/share/blesh/ble.sh
+
 #this line won't be added to the .bash_profile

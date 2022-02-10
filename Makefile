@@ -45,7 +45,7 @@ $(DOTFILE_FOLDER):
 	@echo 'symlinking $(DOTFILE_FOLDER)'
 	ln -s $(HOME)/github/patrickjmcd/cloud9dotfiles $(DOTFILE_FOLDER)
 
-STARSHIP := $(shell which starship)
+STARSHIP := $(shell which starship) > /dev/null
 $(STARSHIP):
 	@echo 'Installing starship prompt'
 	./starship.sh
@@ -57,9 +57,9 @@ git-ssh:
 	git config --global user.email patrick@meshify.com
 	./setup_git_ssh.sh
 
-bash-profile-additions:
-	@echo 'Adding .bash_profile additions'
-	./bash_profile_additions.sh
+bashrc-additions:
+	@echo 'Adding .bashrc additions'
+	./bashrc_additions.sh
 
 dev-apt: check-apt 
 	@echo "Installing development tools"
@@ -75,4 +75,5 @@ dev-yum: check-yum
 	sudo yum install -y tmux tree
 	$(MAKE) linux
 
-linux: $(DOTFILE_FOLDER) bash_profile_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
+linux: $(DOTFILE_FOLDER) bashrc_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
+	pip3 install thefuck --user
