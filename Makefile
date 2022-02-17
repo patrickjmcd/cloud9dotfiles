@@ -65,14 +65,14 @@ dev-apt: check-apt
 	@echo "Installing development tools"
 	sudo apt-get update
 	sudo apt-get -y upgrade
-	sudo apt-get install -y build-essential tmux tree
+	sudo apt-get install -y build-essential tmux tree docker-compose
 	$(MAKE) linux
 
 dev-yum: check-yum 
 	@echo "Installing development tools"
 	sudo yum update
 	sudo yum -y upgrade
-	sudo yum install -y tmux tree
+	sudo yum install -y tmux tree docker-compose
 	$(MAKE) linux
 
 linux: $(DOTFILE_FOLDER) bashrc_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
