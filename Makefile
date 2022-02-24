@@ -13,9 +13,6 @@ help:
 	@echo ''
 	@echo 'Usage:'
 	@echo '     make all					install everything'
-	@echo '     make dev					install tools for a development environment'
-
-
 
 APT := /usr/bin/apt
 YUM := /usr/bin/yum
@@ -26,13 +23,34 @@ check-apt: apt-exists
 yum-exists: ; @which yum > /dev/null
 check-yum: yum-exists
 
+dev-apt: check-apt 
+	@echo "Installing development tools"
+	sudo apt-get update
+	sudo apt-get -y upgrade
+	sudo apt-get install -y build-essential tmux tree
+	$(MAKE) apt-postgres-client
+	$(MAKE) linux
+
+dev-yum: check-yum 
+	@echo "Installing development tools"
+	sudo yum update
+	sudo yum -y upgrade
+	sudo yum install -y tmux tree
+	$(MAKE) linux
+
+linux: $(DOTFILE_FOLDER) bashrc_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE) $(DOCKER_COMPOSE)
+	pip3 install thefuck --user
+
+# install go
 GO := /usr/local/go/bin/go
 $(GO):
 	wget https://go.dev/dl/go$(GO_VERSION).linux-amd64.tar.gz -P /tmp
 	sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf /tmp/go$(GO_VERSION).linux-amd64.tar.gz
 	/usr/local/go/bin/go version > /dev/null
 
+go: $(GO);
 
+# install script to keep cloud9 alive
 CLOUD9_KEEPALIVE := ~/.c9/stop-if-inactive.sh
 $(CLOUD9_KEEPALIVE):
 	sudo mv ~/.c9/stop-if-inactive.sh ~/.c9/stop-if-inactive.sh-SAVE
@@ -40,40 +58,58 @@ $(CLOUD9_KEEPALIVE):
 	sudo chown root:root ~/.c9/stop-if-inactive.sh
 	sudo chmod 755 ~/.c9/stop-if-inactive.sh
 
+cloud9-keepalive: $(CLOUD9_KEEPALIVE);
+
+# link up dotfiles
 DOTFILE_FOLDER := $(HOME)/.dotfiles
 $(DOTFILE_FOLDER):
 	@echo 'symlinking $(DOTFILE_FOLDER)'
 	ln -s $(HOME)/github/patrickjmcd/cloud9dotfiles $(DOTFILE_FOLDER)
 
-STARSHIP := $(shell which starship) > /dev/null
+dotfile-folder: $(DOTFILE_FOLDER);
+
+# install starship prompt (it's pretty great)
+STARSHIP := $(shell which starship > /dev/null)
 $(STARSHIP):
 	@echo 'Installing starship prompt'
 	./starship.sh
 
+starship: $(STARSHIP);
+
+# set up git globabls
 git-ssh:
 	@echo 'Setting up github ssh'
 	git config --global --add url."git@github.com:".insteadOf "https://github.com/"
-	git config --global user.name "Patrick McDonagh"
-	git config --global user.email patrick@meshify.com
+	@printf "`tput setaf 2`Afterwards, set up your global username and email with:`tput sgr0`\n"
+	@printf "`tput setaf 2`\tgit config --global user.name \"YOUR NAME\"`tput sgr0`\n"
+	@printf "`tput setaf 2`\tgit config --global user.email me@meshify.com`tput sgr0`\n"
+	@echo 'git config --global user.name "YOUR NAME"'
+	@echo 'git config --global user.email me@meshify.com'
 	./setup_git_ssh.sh
 
+# add necessary lines to .bashrc
 bashrc-additions:
 	@echo 'Adding .bashrc additions'
 	./bashrc_additions.sh
 
-dev-apt: check-apt 
-	@echo "Installing development tools"
+# install psql client
+PSQL := $(shell which psql > /dev/null)
+$(PSQL): check-apt
+	@echo "Installing postgres client"
+	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(shell lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 	sudo apt-get update
-	sudo apt-get -y upgrade
-	sudo apt-get install -y build-essential tmux tree docker-compose
-	$(MAKE) linux
+	sudo apt-get install postgresql-client-common postgresql-client-12
 
-dev-yum: check-yum 
-	@echo "Installing development tools"
-	sudo yum update
-	sudo yum -y upgrade
-	sudo yum install -y tmux tree docker-compose
-	$(MAKE) linux
+apt-postgres-client: $(PSQL);
 
-linux: $(DOTFILE_FOLDER) bashrc_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE)
-	pip3 install thefuck --user
+# install docker compose (not docker-compose, because that's GONE)
+DOCKER_COMPOSE := $(shell docker compose version > /dev/null)
+$(DOCKER_COMPOSE):
+	@echo "Installing docker compose"
+	mkdir -p ~/.docker/cli-plugins/
+	curl -SL https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+	chmod +x ~/.docker/cli-plugins/docker-compose
+	@echo `docker compose version`
+
+docker-compose: $(DOCKER_COMPOSE);

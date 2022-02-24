@@ -26,6 +26,7 @@ alias glg="git log --graph --decorate --pretty=oneline --abbrev-commit --all"
 alias clone="git clone"
 alias gopen="open_git_repo_online"
 alias gcho="git checkout"
+alias grim="git checkout development && git pull && git checkout - && git rebase -i development"
 
 alias tf=terraform
 
