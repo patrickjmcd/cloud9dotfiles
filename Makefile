@@ -38,7 +38,7 @@ dev-yum: check-yum
 	sudo yum install -y tmux tree
 	$(MAKE) linux
 
-linux: $(DOTFILE_FOLDER) bashrc_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE) $(DOCKER_COMPOSE)
+linux: $(DOTFILE_FOLDER) bashprofile_additions git-ssh $(STARSHIP) $(GO) $(CLOUD9_KEEPALIVE) $(DOCKER_COMPOSE)
 	pip3 install thefuck --user
 
 # install go
@@ -87,10 +87,10 @@ git-ssh:
 	@echo 'git config --global user.email me@meshify.com'
 	./setup_git_ssh.sh
 
-# add necessary lines to .bashrc
-bashrc-additions:
-	@echo 'Adding .bashrc additions'
-	./bashrc_additions.sh
+# add necessary lines to .bashprofile
+bashprofile-additions:
+	@echo 'Adding .bash_profile additions'
+	./bashprofile_additions.sh
 
 # install psql client
 PSQL := $(shell which psql > /dev/null)
